@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="javatest" default="all">
+  
+  
+  <property file="javatest.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="128m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/SCCS/**"/>
+    <exclude name="**/RCS/**"/>
+    <exclude name="**/rcs/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/.pyc/**"/>
+    <exclude name="**/.pyo/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/*.lib/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/.bundle/**"/>
+    <exclude name="**/*.rbc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.zip"/>
+    <include name="*.apk"/>
+    <include name="*.war"/>
+    <include name="*.egg"/>
+    <include name="*.ear"/>
+    <include name="*.swc"/>
+    <include name="*.jar"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <include name="**/?*.properties"/>
+    <include name="**/?*.xml"/>
+    <include name="**/?*.gif"/>
+    <include name="**/?*.png"/>
+    <include name="**/?*.jpeg"/>
+    <include name="**/?*.jpg"/>
+    <include name="**/?*.html"/>
+    <include name="**/?*.dtd"/>
+    <include name="**/?*.tld"/>
+    <include name="**/?*.ftl"/>
+  </patternset>
+  
+  <!-- JDK definitions -->
+  
+  <property name="jdk.bin.1.7" value="${jdk.home.1.7}/bin"/>
+  <path id="jdk.classpath.1.7">
+    <fileset dir="${jdk.home.1.7}">
+      <include name="jre/lib/alt-rt.jar"/>
+      <include name="jre/lib/charsets.jar"/>
+      <include name="jre/lib/deploy.jar"/>
+      <include name="jre/lib/javaws.jar"/>
+      <include name="jre/lib/jce.jar"/>
+      <include name="jre/lib/jsse.jar"/>
+      <include name="jre/lib/management-agent.jar"/>
+      <include name="jre/lib/plugin.jar"/>
+      <include name="jre/lib/resources.jar"/>
+      <include name="jre/lib/rt.jar"/>
+      <include name="jre/lib/ext/dnsns.jar"/>
+      <include name="jre/lib/ext/localedata.jar"/>
+      <include name="jre/lib/ext/sunec.jar"/>
+      <include name="jre/lib/ext/sunjce_provider.jar"/>
+      <include name="jre/lib/ext/sunmscapi.jar"/>
+      <include name="jre/lib/ext/zipfs.jar"/>
+    </fileset>
+  </path>
+  
+  <property name="project.jdk.home" value="${jdk.home.1.7}"/>
+  <property name="project.jdk.bin" value="${jdk.bin.1.7}"/>
+  <property name="project.jdk.classpath" value="jdk.classpath.1.7"/>
+  
+  
+  <!-- Project Libraries -->
+  
+  <path id="library.aopalliance.classpath">
+    <pathelement location="${basedir}/src/aopalliance.jar"/>
+  </path>
+  
+  <path id="library.guice-3.0.classpath">
+    <pathelement location="${basedir}/src/guice-3.0.jar"/>
+  </path>
+  
+  <path id="library.javax.inject.classpath">
+    <pathelement location="${basedir}/src/javax.inject.jar"/>
+  </path>
+  <!-- Register Custom Compiler Taskdefs -->
+  <property name="javac2.home" value="${idea.home}/lib"/>
+  <path id="javac2.classpath">
+    <pathelement location="${javac2.home}/javac2.jar"/>
+    <pathelement location="${javac2.home}/jdom.jar"/>
+    <pathelement location="${javac2.home}/asm.jar"/>
+    <pathelement location="${javac2.home}/asm-commons.jar"/>
+    <pathelement location="${javac2.home}/jgoodies-forms.jar"/>
+  </path>
+  <target name="register.custom.compilers">
+    <taskdef name="javac2" classname="com.intellij.ant.Javac2" classpathref="javac2.classpath"/>
+    <taskdef name="instrumentIdeaExtensions" classname="com.intellij.ant.InstrumentIdeaExtensions" classpathref="javac2.classpath"/>
+  </target>
+  
+  <!-- Modules -->
+  
+  
+  <!-- Module JavaTest -->
+  
+  <dirname property="module.javatest.basedir" file="${ant.file}"/>
+  
+  
+  <property name="module.jdk.home.javatest" value="${jdk.home.1.7}"/>
+  <property name="module.jdk.bin.javatest" value="${jdk.bin.1.7}"/>
+  <property name="module.jdk.classpath.javatest" value="jdk.classpath.1.7"/>
+  
+  <property name="compiler.args.javatest" value="${compiler.args}"/>
+  
+  <property name="javatest.output.dir" value="${module.javatest.basedir}/out/production/JavaTest"/>
+  <property name="javatest.testoutput.dir" value="${module.javatest.basedir}/out/test/JavaTest"/>
+  
+  <path id="javatest.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="javatest.module.production.classpath">
+    <path refid="${module.jdk.classpath.javatest}"/>
+    <path refid="library.guice-3.0.classpath"/>
+    <path refid="library.aopalliance.classpath"/>
+    <path refid="library.javax.inject.classpath"/>
+  </path>
+  
+  <path id="javatest.runtime.production.module.classpath">
+    <pathelement location="${javatest.output.dir}"/>
+    <path refid="library.guice-3.0.classpath"/>
+    <path refid="library.aopalliance.classpath"/>
+    <path refid="library.javax.inject.classpath"/>
+  </path>
+  
+  <path id="javatest.module.classpath">
+    <path refid="${module.jdk.classpath.javatest}"/>
+    <pathelement location="${javatest.output.dir}"/>
+    <path refid="library.guice-3.0.classpath"/>
+    <path refid="library.aopalliance.classpath"/>
+    <path refid="library.javax.inject.classpath"/>
+  </path>
+  
+  <path id="javatest.runtime.module.classpath">
+    <pathelement location="${javatest.testoutput.dir}"/>
+    <pathelement location="${javatest.output.dir}"/>
+    <path refid="library.guice-3.0.classpath"/>
+    <path refid="library.aopalliance.classpath"/>
+    <path refid="library.javax.inject.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.javatest">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.javatest">
+    <patternset refid="excluded.from.module.javatest"/>
+  </patternset>
+  
+  <path id="javatest.module.sourcepath">
+    <dirset dir="${module.javatest.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.javatest" depends="compile.module.javatest.production,compile.module.javatest.tests" description="Compile module JavaTest"/>
+  
+  <target name="compile.module.javatest.production" depends="register.custom.compilers" description="Compile module JavaTest; production classes">
+    <mkdir dir="${javatest.output.dir}"/>
+    <javac2 destdir="${javatest.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.javatest}/javac">
+      <compilerarg line="${compiler.args.javatest}"/>
+      <bootclasspath refid="javatest.module.bootclasspath"/>
+      <classpath refid="javatest.module.production.classpath"/>
+      <src refid="javatest.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.javatest"/>
+    </javac2>
+    
+    <copy todir="${javatest.output.dir}">
+      <fileset dir="${module.javatest.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.javatest.tests" depends="register.custom.compilers,compile.module.javatest.production" description="compile module JavaTest; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.javatest" description="cleanup module">
+    <delete dir="${javatest.output.dir}"/>
+    <delete dir="${javatest.testoutput.dir}"/>
+  </target>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.javatest" description="cleanup all"/>
+  
+  <target name="build.modules" depends="init, clean, compile.module.javatest" description="build all modules"/>
+  
+  <target name="all" depends="build.modules" description="build all"/>
+</project>
