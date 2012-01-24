@@ -34,7 +34,7 @@
 </section>
 
 <section class="slide" id="intro1">
-	<h2>Co je spatne?</h2>
+	<h2>What's wrong?</h2>
     <textarea class="code" mode="text/x-java" style="display: none;">public interface ILogger
 {
 }
@@ -58,7 +58,7 @@ public class ErrorHandler implements IErrorHandler {
 </section>
 
 <section class="slide" id="intro2">
-	<h2>A krome historickeho jazyka?</h2>
+	<h2>And except ancient language? :-)</h2>
     <textarea class="code" mode="text/x-csharp" style="display: none;">public interface ILogger
 {
 }
@@ -82,7 +82,7 @@ public class ErrorHandler : IErrorHandler
 </section>
 
 <section class="slide" id="intro3">
-	<h2>Reseni - nezavisle + testovatelne</h2>
+	<h2>Solution - independent and testable</h2>
     <textarea class="code" mode="text/x-csharp" style="display: none;">public interface ILogger
 {
 }
@@ -106,7 +106,7 @@ public class ErrorHandler : IErrorHandler
 </section>
 
 <section class="slide" id="Basic">
-    <h2>Zaklady - prechodny objekt</h2>
+    <h2>Basics - transient object</h2>
     <div class="slide" id="BasicAutofac">
     <h3>Autofac</h3>
     <textarea class="code" mode="text/x-csharp" style="display: none;">var builder = new ContainerBuilder();
@@ -138,7 +138,7 @@ ILogger service = container.getInstance(ILogger.class);</textarea>
 </section>
 
 <section class="slide" id="BasicAll">
-    <h2>Zaklady - prechodny objekt</h2>
+    <h2>Basics - transient object</h2>
     <h3>Autofac</h3>
     <textarea class="code" mode="text/x-csharp" style="display: none;">var builder = new ContainerBuilder();
 builder.RegisterType&lt;Logger&gt;().As&lt;ILogger&gt;();
@@ -162,7 +162,7 @@ ILogger obj = container.getInstance(ILogger.class);</textarea>
 </section>
 
 <section class="slide" id="BasicSingleton">
-    <h2>Zaklady - singleton</h2>
+    <h2>Basics - singleton</h2>
     <h3>Autofac</h3>
     <textarea class="code" mode="text/x-csharp" style="display: none;">var builder = new ContainerBuilder();
 builder.RegisterType&lt;Logger&gt;().As&lt;ILogger&gt;().SingleInstance();
@@ -195,7 +195,7 @@ var obj = factory();</textarea>
 </section>
 
 <section class="slide" id="FuncWithParam">
-    <h2>Func&lt;anything&gt; s parametry</h2>
+    <h2>Func&lt;anything&gt; with parameters</h2>
     <textarea class="code" mode="text/x-csharp" style="display: none;">var builder = new ContainerBuilder();
 // builder.RegisterType&lt;Logger&gt;().As&lt;ILogger&gt;();
 builder.RegisterType&lt;ErrorHandler&gt;().As&lt;IErrorHandler&gt;();
@@ -206,7 +206,7 @@ var obj = factory(logger);</textarea>
 </section>
 
 <section class="slide" id="Delegates">
-    <h2>Delegate s parametry</h2>
+    <h2>Delegate with parameters</h2>
     <textarea class="code" mode="text/x-csharp" style="display: none;">public class KlassWith2IntParams
 {
     public int Param1 { get; private set; }
@@ -227,10 +227,11 @@ var container = builder.Build();
 var factory = container.Resolve&lt;KlassWith2IntParamsFactory&gt;();
 var obj = factory(2, 1);
 </textarea>
+<p>Note: parameters are matched by their names</p>
 </section>
 
 <section class="slide" id="AutoRegistration">
-    <h2>Auto registrace</h2>
+    <h2>Autoregistration</h2>
     <textarea class="code" mode="text/x-csharp" style="display: none;">var builder = new ContainerBuilder();
 builder.RegisterType&lt;Logger&gt;().As&lt;ILogger&gt;().SingleInstance();
 builder.RegisterAssemblyTypes(typeof(IWebService).Assembly)
@@ -242,7 +243,7 @@ builder.RegisterAssemblyTypes(typeof(IWebService).Assembly)
 
 <section class="slide" id="BenchmarkSetup">
     <h2>Benchmark Setup</h2>
-    <p>100 000 krat vytvorit takovouto strukturu objektu a pridat je vsechny do pole.</p>
+    <p>100 000 times create this object graph and add them to array in first case, leave them to GC in second case</p>
     <textarea class="code" mode="text/x-csharp" style="display: none;">public PlainUseCase()
 {
     _logger = new Logger();
@@ -268,19 +269,19 @@ public override IWebService Run()
 </section>
 
 <section class="slide" id="BenchmarkContenders">
-    <h2>Benchmark soutezici</h2>
+    <h2>Benchmark contenders</h2>
     <ul>
     <li>.Net 4.5 CTP/Mono 2.10.6 - plain, Ninject, Autofac, Munq, Dynamo, StructureMap, Castle.Windsor, BTDB.IOC(+Func)</li>
     <li>Java 1.7 64bit - plain, Guice</li>
-    <li>C++ - plain(cheating)</li>
+    <li>C++ - plain(cheating by leaking memory)</li>
     <li>NodeJs 0.6.7 - plain</li>
     <li>Dart nightbuild 23.1.2012 - plain</li>
     </ul>
-    <p>Ninject - vyhozen ze srovnani jako jediny nefungoval v Monu a byl stejne 5 krat pomalejsi nez druhy nejhorsi</p>
+    <p>Ninject - removed from comparison because only one didn't worked with Mono and was 5 times slower then second worst</p>
 </section>
 
 <section class="slide" id="BenchmarkResults">
-    <h2>Benchmark vysledky (ms)</h2>
+    <h2>Benchmark result with storing objects (ms)</h2>
     <table>
     <tr><td style="padding: 0 15px 0 0">
     <table class="zebra">
@@ -329,16 +330,66 @@ public override IWebService Run()
     </table>
 </section>
 
+<section class="slide" id="BenchmarkResults2">
+    <h2>Benchmark result without storing objects (ms)</h2>
+    <table>
+    <tr><td style="padding: 0 15px 0 0">
+    <table class="zebra">
+    <thead><tr><th></th><th>.Net64</th><th>Mono32</th></tr></thead>
+    <tbody>
+    <tr><td>Plain</td><td>9.4</td><td>75.0</td></tr>
+    <tr><td>BTDBFunc</td><td>24.0</td><td>75.8</td></tr>
+    <tr><td>BTDB</td><td>33.6</td><td>90.8</td></tr>
+    <tr><td>Dynamo</td><td>105.8</td><td>235.4</td></tr>
+    <tr><td>Munq</td><td>262.1</td><td>636.1</td></tr>
+    <tr><td>StructureMap</td><td>2028.1</td><td>5004.8</td></tr>
+    <tr><td>Autofac</td><td>4214.6</td><td>11465.7</td></tr>
+    <tr><td>Windsor</td><td>4853.6</td><td>8752.2</td></tr>
+    </tbody>
+    </table>
+    </td><td style="padding: 0 0 0 15px">
+    <table class="zebra">
+    <thead><tr><th>Java</th><th>1st run</th><th>2nd run</th></tr></thead>
+    <tbody>
+    <tr><td>Plain</td><td>17.3</td><td>3.8</td></tr>
+    <tr><td>Guice</td><td>292.7</td><td>121.6</td></tr>
+    </tbody>
+    </table>
+    <br />
+    <table class="zebra">
+    <thead><tr><th>C++</th><th>32bit</th><th>64bit</th></tr></thead>
+    <tbody>
+    <tr><td>Plain</td><td>41</td><td>50</td></tr>
+    </tbody>
+    </table>
+    <br />
+    <table class="zebra">
+    <thead><tr><th>NodeJs</th><th>32bit</th></tr></thead>
+    <tbody>
+    <tr><td>Plain</td><td>17</td></tr>
+    </tbody>
+    </table>
+    <br />
+    <table class="zebra">
+    <thead><tr><th>Dart</th><th>32bit</th></tr></thead>
+    <tbody>
+    <tr><td>Plain</td><td>23</td></tr>
+    </tbody>
+    </table>
+    </td></tr>
+    </table>
+</section>
+
 <section class="slide" id="Links">
-    <h2>Linky</h2>
+    <h2>Links</h2>
     <ul>
-    <li><a href="https://github.com/Bobris/IOCPerfTest">github.com/Bobris/IOCPerfTest</a> Kompletni zdrojaky testu</li>
-    <li><a href="https://github.com/Bobris/BTDB">github.com/Bobris/BTDB</a> Moje nejen IOC knihovna</li>
-    <li><a href="http://code.google.com/p/autofac/">code.google.com/p/autofac/</a> Autofac knihovna</li>
-    <li><a href="http://structuremap.net/structuremap">structuremap.net/structuremap</a> StructureMap knihovna</li>
-    <li><a href="http://docs.castleproject.org/Windsor.MainPage.ashx">docs.castleproject.org/Windsor.MainPage.ashx</a> Castle Windsor knihovna</li>
-    <li><a href="http://code.google.com/p/google-guice/">code.google.com/p/google-guice/</a> Guice</li>
-    <li><a href="http://imakewebthings.github.com/deck.js/">imakewebthings.github.com/deck.js</a> v tomto byla tato prezentace udelana</li>
+    <li><a href="https://github.com/Bobris/IOCPerfTest">github.com/Bobris/IOCPerfTest</a> Complete sources of test</li>
+    <li><a href="https://github.com/Bobris/BTDB">github.com/Bobris/BTDB</a> My not just IOC Library</li>
+    <li><a href="http://code.google.com/p/autofac/">code.google.com/p/autofac/</a> Autofac Library</li>
+    <li><a href="http://structuremap.net/structuremap">structuremap.net/structuremap</a> StructureMap Library</li>
+    <li><a href="http://docs.castleproject.org/Windsor.MainPage.ashx">docs.castleproject.org/Windsor.MainPage.ashx</a> Castle Windsor Library</li>
+    <li><a href="http://code.google.com/p/google-guice/">code.google.com/p/google-guice/</a> Guice Library</li>
+    <li><a href="http://imakewebthings.github.com/deck.js/">imakewebthings.github.com/deck.js</a> this was used for making this presentation</li>
     </ul>
 </section>
 <section class="slide" id="Final">
